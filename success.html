@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Order Success - Purses & Posies</title>
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" href="assets/css/fontawesome.css">
+    <link rel="stylesheet" href="assets/css/templatemo-sixteen.css">
+    <link rel="stylesheet" href="assets/css/owl.css">
+    <!-- Add these in the head section -->
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style>
+        .receipt-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 40px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            background-color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .receipt-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f33f3f;
+        }
+        .receipt-header h3 {
+            color: #f33f3f;
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .receipt-header p {
+            color: #666;
+            margin: 5px 0;
+            font-size: 16px;
+        }
+        .receipt-items {
+            margin: 30px 0;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #fafafa;
+        }
+        .receipt-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 16px;
+            color: #333;
+        }
+        .receipt-item:last-child {
+            border-bottom: none;
+        }
+        .receipt-item span:first-child {
+            font-weight: 500;
+        }
+        .receipt-item span:last-child {
+            color: #f33f3f;
+            font-weight: bold;
+        }
+        .receipt-total {
+            margin-top: 30px;
+            text-align: right;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        .receipt-total p {
+            font-size: 20px;
+            color: #f33f3f;
+            margin: 0;
+        }
+        .download-btn {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .filled-button {
+            padding: 12px 25px;
+            background-color: #f33f3f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .filled-button:hover {
+            background-color: #e62e2e;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        @media print {
+            .download-btn {
+                display: none;
+            }
+            .receipt-container {
+                box-shadow: none;
+                border: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar"></div>
+
+    <div class="page-heading products-heading header-text">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="text-content">
+                        <h4>Order Successful!</h4>
+                        <h2>Thank you for your purchase</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="receipt-container" id="receipt">
+        <div class="receipt-header">
+            <h3>Purses & Posies</h3>
+            <p>Order Receipt</p>
+            <p id="order-date"></p>
+            <p id="order-id"></p>
+        </div>
+        <div class="receipt-items" id="receipt-items">
+            <!-- Items will be inserted here -->
+        </div>
+        <div class="receipt-total">
+            <p>Total: $<span id="receipt-total"></span></p>
+        </div>
+        <div class="download-btn">
+            <button class="filled-button" id="downloadBtn">Download Receipt</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get order details from localStorage
+            const orderDetails = JSON.parse(localStorage.getItem('lastOrder'));
+            if (!orderDetails) {
+                console.error('No order details found');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Add event listener to download button
+            document.getElementById('downloadBtn').addEventListener('click', () => downloadReceipt(orderDetails));
+
+            // Verify elements exist before updating
+            const orderDateEl = document.getElementById('order-date');
+            const orderIdEl = document.getElementById('order-id');
+            const itemsContainer = document.getElementById('receipt-items');
+            const totalEl = document.getElementById('receipt-total');
+
+            if (!orderDateEl || !orderIdEl || !itemsContainer || !totalEl) {
+                console.error('Required elements not found');
+                return;
+            }
+
+            // Display order information immediately
+            orderDateEl.textContent = new Date(orderDetails.date).toLocaleString();
+            orderIdEl.textContent = `Order ID: ${orderDetails.orderId}`;
+
+            // Display items immediately
+            orderDetails.items.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'receipt-item';
+                itemElement.innerHTML = `
+                    <span>${item.name} x ${item.quantity}</span>
+                    <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                `;
+                itemsContainer.appendChild(itemElement);
+            });
+
+            // Display total immediately
+            const total = orderDetails.total;
+            totalEl.textContent = total.toFixed(2);
+        });
+
+        function downloadReceipt(orderDetails) {
+            const receipt = document.getElementById('receipt');
+            const options = {
+                margin: 1,
+                filename: `receipt-${orderDetails.orderId}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            // Remove download button temporarily for PDF generation
+            const downloadBtn = document.getElementById('downloadBtn');
+            downloadBtn.style.display = 'none';
+
+            html2pdf().set(options).from(receipt).save().then(() => {
+                // Show download button again after PDF is generated
+                downloadBtn.style.display = 'block';
+            }).catch(error => {
+                console.error('Error generating PDF:', error);
+                downloadBtn.style.display = 'block';
+            });
+        }
+    </script>
+
+    <!-- Add these in the head section -->
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    
+    <!-- Add these before custom.js -->
+    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!-- Add these before custom.js -->
+    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/custom.js"></script>
+    <script src="assets/js/nav.js" defer></script>
+</body>
+</html>

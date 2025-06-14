@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Shopping Cart - Purses & Posies</title>
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" href="assets/css/fontawesome.css">
+    <link rel="stylesheet" href="assets/css/templatemo-sixteen.css">
+    <link rel="stylesheet" href="assets/css/owl.css">
+</head>
+<body>
+    <!-- ***** Preloader Start ***** -->
+    <div id="preloader">
+        <div class="jumper">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>  
+    <!-- ***** Preloader End ***** -->
+
+    <!-- Header -->
+    <div id="navbar"></div>
+
+    <!-- Page Content -->
+    <div class="page-heading products-heading header-text">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="text-content">
+                        <h4>Your Shopping Cart</h4>
+                        <h2>Review Your Items</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cart-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="cart-items" id="cart-items">
+                        <!-- Cart items will be dynamically inserted here -->
+                    </div>
+                    <div class="cart-summary">
+                        <div class="summary-item">
+                            <span>Subtotal:</span>
+                            <span id="cart-subtotal">$0.00</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Tax (10%):</span>
+                            <span id="cart-tax">$0.00</span>
+                        </div>
+                        <div class="summary-item total">
+                            <span>Total:</span>
+                            <span id="cart-total">$0.00</span>
+                        </div>
+                        <button class="filled-button" id="checkout-btn">Proceed to Checkout</button>
+                        <div id="paypal-button-container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer"></div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/custom.js"></script>
+    <script src="assets/js/nav.js"></script>
+    <!-- PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=AXVbURyl_wvRruC5T8MD2OHG08C8DWpv2U1fm0Px0UyvbwrKntoBwJ5y7_cdC_93v3IwI_qnm92-TMW6"></script>
+    <!-- Cart Scripts -->
+    <script src="assets/js/cart.js"></script>
+</body>
+</html>
